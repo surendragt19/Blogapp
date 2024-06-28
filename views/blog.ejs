@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>Blog</title>
+  <style>
+    .img-fluid {
+      max-height: 400px; 
+      width: 100%; 
+      height: auto; 
+    }
+    .scrollable-pre {
+  max-height: 300px; 
+  overflow-y: auto; 
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+}
+
+  </style>
+</head>
+<body>
+  <%- include('./partials/nav') %>
+
+  <div class="container mt-4">
+    <h1 class="text-center"><u><%= blog.title %></u></h1>
+    <img src="<%= blog.coverImageURL %>" class="img-fluid mx-auto d-block mt-4" alt="Blog Cover Image" />
+    <pre class="mt-5"><%= blog.body %></pre>
+  </div>
+
+  <div class="container mt-4 d-flex align-items-center">
+    <img src="<%= blog.createdBy.profileImageURL %>" class="rounded-circle" style="width: 40px; height: 40px;" alt="Author Profile Image" />
+    <div class="ms-2">
+        <span><%= blog.createdBy.fullName %></span><br/>
+        <span class="text-muted"><%= new Date(blog.createdAt).toLocaleString() %></span>
+    </div>
+</div>
+
+
+  <div class="container mt-3">
+    <h2>Comments (<%= comments.length %>)</h2>
+    <% if (locals.user) { %>
+    <form action="/blog/comment/<%= blog._id %>" method="post" class="mt-3">
+      <div class="mb-3">
+        <input
+          type="text"
+          name="content"
+          class="form-control"
+          placeholder="Enter your comment"
+        />
+        <button class="btn btn-sm btn-primary mt-2" type="submit">Add+</button>
+      </div>
+    </form>
+    <% } %>
+    <div class="container mt-3">
+      <% comments.forEach(comment => { %>
+      <div class="d-flex align-items-start mb-3">
+        <img src="<%= comment.createdBy.profileImageURL %>" class="rounded-circle me-2" style="width: 40px; height: 40px;" alt="Commenter Profile Image" />
+        <div>
+          <strong><%= comment.createdBy.fullName %></strong>
+          <small class="text-muted d-block"><%= new Date(comment.createdAt).toLocaleString() %></small>
+          <hr>
+          <pre class="mb-0 scrollable-pre"><%= comment.content %></pre>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <%- include('./partials/scripts') %>
+</body>
+</html>
